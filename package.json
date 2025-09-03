@@ -1,0 +1,44 @@
+{
+  "name": "vite-admin",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "xysConfig": {
+    "dependenceType": "local",
+    "viewPath": "Admin/Contract",
+    "node": "14"
+  },
+  "scripts": {
+    "dev": "vite",
+    "salpha": "npm run sbeta",
+    "sgamma": "npm run sbeta",
+    "sbeta": "vue-tsc -b && cross-env NODE_ENV=beta vite build --mode development",
+    "dist": "npm run build",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@soda/get-current-script": "^1.0.2",
+    "@xysfe/admin-menu-vue3": "^1.0.2",
+    "axios": "^1.11.0",
+    "core-js": "^3.45.1",
+    "element-plus": "^2.11.1",
+    "pinia": "^3.0.3",
+    "qs": "^6.14.0",
+    "vant": "^4.9.21",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.1"
+  },
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "@vitejs/plugin-vue": "^5.2.3",
+    "@vue/tsconfig": "^0.7.0",
+    "cross-env": "^10.0.0",
+    "sass": "^1.91.0",
+    "typescript": "~5.8.3",
+    "unplugin-vue-components": "^29.0.0",
+    "vite": "^6.3.5",
+    "vite-plugin-style-inject": "^0.0.1",
+    "vue-tsc": "^2.2.8"
+  }
+}
