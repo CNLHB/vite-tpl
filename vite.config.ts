@@ -55,7 +55,7 @@ const getRollupOptOptions = (projectName: string, isBeta: boolean) => {
   };
 };
 export default defineConfig({
-  base: isDevelopment ? "/static" : env.VITE_STATIC_URL,
+  base: env.VITE_STATIC_URL,
   plugins: [
     // Vue 官方插件
     vue(),
