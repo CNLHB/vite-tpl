@@ -1,75 +1,92 @@
-// @ts-nocheck
 import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
-// import legacy from '@vitejs/plugin-legacy'
 import Components from "unplugin-vue-components/vite";
 import AutoImport from 'unplugin-auto-import/vite'
 import { VantResolver } from "unplugin-vue-components/resolvers";
 import VitePluginStyleInject from 'vite-plugin-style-inject';
 import pkg from './package.json'
-import path, { resolve } from "path";
-const projectName = pkg.name
-const { NODE_ENV } = process.env
-// https://vite.dev/config/ 
-let env = loadEnv(NODE_ENV || '', process.cwd())
-let idc = NODE_ENV === 'production'
-let isDev = NODE_ENV === 'development'
-let isBeta = NODE_ENV === 'beta'
-let isAdmin = env.VITE_IS_ADMIN === 'yes'
-console.log('NODE_ENV', NODE_ENV, 'isAdmin', isAdmin, 'isDev', isDev, 'isBeta', isBeta, 'idc', idc);
+import path from "path";
+const projectName = pkg.name;
+const { NODE_ENV = '' } = process.env;
+// https://vite.dev/config/
+const env = loadEnv(NODE_ENV, process.cwd());
+const isProduction = NODE_ENV === 'production';
+const isDevelopment = NODE_ENV === 'development';
+const isBeta = NODE_ENV === 'beta';
+const isAdmin = env.VITE_IS_ADMIN === 'yes';
+
+console.log('NODE_ENV', NODE_ENV, 'isAdmin', isAdmin, 'isDevelopment', isDevelopment, 'isBeta', isBeta, 'isProduction', isProduction);
 
 
-function getRollupOptOptions(projectName, isBeta) {
+/**
+ * 根据项目配置生成 Rollup 输出选项
+ * @param projectName 项目名称
+ * @param isBeta 是否为 Beta 环境
+ * @returns Rollup 输出选项
+ */
+const getRollupOptOptions = (projectName: string, isBeta: boolean) => {
+  // Beta 环境且为管理员模式时的特殊配置
   if (isBeta && isAdmin) {
     return {
-      // 所有代码打包到单个文件
-      manualChunks: (_id) => {
-        // 无论是什么模块，都打包到 app 中
-        return 'app'
-      },
-      // 文件命名
+      // 将所有代码打包到单个文件
+      manualChunks: () => 'app',
+      // 入口文件命名
       entryFileNames: `${projectName}/js/app.js`,
+      // 代码分割文件命名
       chunkFileNames: `${projectName}/js/app.js`,
-    }
+    };
   }
+  // 默认配置
   return {
-    // 处理其他资源文件
-    entryFileNames: (_entryInfo) => {
-      return `${projectName}/js/[name]-[hash].js`;
+    // 入口文件命名
+    entryFileNames: () => `${projectName}/js/[name]-[hash].js`,
+    // 代码分割文件命名
+    chunkFileNames: (chunkInfo: any) => {
+      // 提取页面目录名作为文件名
+      const regex = /\/pages\/([^\/]+)\/.*\.vue$/;
+      const match = chunkInfo.facadeModuleId?.match(regex) || [];
+      const name = match[1] || '[name]';
+      return `${projectName}/js/${name}-[hash].js`;
     },
-    chunkFileNames: (_chunkInfo) => {
-      const regex = /\/pages\/([^\/]+)\/.*\.vue$/
-      let name = ''
-      if (_chunkInfo.facadeModuleId) {
-        const match = _chunkInfo.facadeModuleId.match(regex) || []
-        // console.log('匹配到的目录名:', match[1]) // 输出: account
-        name = match[1]
-      }
-      return `${projectName}/js/${name ? name : '[name]'}-[hash].js`;
-    },
+    // 手动代码分割
     manualChunks: {
       vue: ["vue"],
     },
-  }
-}
+  };
+};
 export default defineConfig({
-  base: isDev ? "/static" : env.VITE_STATIC_URL,
+  base: isDevelopment ? "/static" : env.VITE_STATIC_URL,
   plugins: [
+    // Vue 官方插件
     vue(),
-    // legacy({
-    //   targets: ['defaults', 'ie >= 11', 'chrome 52'], // 需要兼容的目标列表
-    //   additionalLegacyPolyfills: ['regenerator-runtime/runtime'],
-    //   renderLegacyChunks: true,
-    //   polyfills: []
-    // }),
+
+    // 仅在 Beta 环境且为管理员模式时启用样式注入插件
     isBeta && isAdmin ? VitePluginStyleInject() : null,
+
+    // 自动导入 Vue 相关 API
     AutoImport({
-      imports: [{ 'vue': ['reactive', 'computed', 'ref', 'watch', 'onMounted', 'onUnmounted'] }, 'vue-router'],
+      imports: [
+        // Vue 组合式 API
+        {
+          'vue': [
+            'reactive',
+            'computed',
+            'ref',
+            'watch',
+            'onMounted',
+            'onUnmounted'
+          ]
+        },
+        // Vue Router
+        'vue-router'
+      ],
       dts: true,
       resolvers: [
         VantResolver()
       ],
     }),
+
+    // 自动导入组件
     Components({
       resolvers: [VantResolver()],
       dts: true,
@@ -92,7 +109,7 @@ export default defineConfig({
       [`^${env.VITE_BASE_URL}`]: {
         target: 'http://localhost:5173',
         changeOrigin: true,
-        rewrite: (path) => {
+        rewrite: (_path) => {
           // 移除基础路径，让 Vue Router 处理
           return '/'
         }
@@ -100,10 +117,15 @@ export default defineConfig({
     },
     host: '0.0.0.0' // 允许外部访问
   },
+  // 构建配置
   build: {
-    outDir: "dist",
+    // 输出目录
+    outDir: 'dist',
+    // 静态资源目录
+    assetsDir: 'static',
     assetsInlineLimit: 0,
-    cssCodeSplit: idc || !isAdmin,
+    cssCodeSplit: isProduction || !isAdmin,
+    // Rollup 配置
     rollupOptions: {
       input: {
         index: path.resolve(__dirname, `${projectName}.html`),

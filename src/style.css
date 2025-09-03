@@ -1,4 +1,0 @@
-/* 修复admin滚动条样式问题 */
-.admin-sidebar .scrollbar-wrapper .el-scrollbar__view{
-  height: auto !important;
-}

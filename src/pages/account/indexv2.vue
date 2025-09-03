@@ -2,7 +2,7 @@
 </script>
 
 <template>
-  <h1>
+  <h1 class="card">
     account
     <img src="./images/btn_bg.png" alt="">
   </h1>
@@ -10,6 +10,9 @@
 
 <style scoped>
 .card {
-  padding: 2em;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
 }
 </style>
