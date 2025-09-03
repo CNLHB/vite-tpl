@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
+// import legacy from '@vitejs/plugin-legacy'
 import Components from "unplugin-vue-components/vite";
 import AutoImport from 'unplugin-auto-import/vite'
 import { VantResolver } from "unplugin-vue-components/resolvers";
@@ -55,6 +56,12 @@ export default defineConfig({
   base: isDev ? "/static" : env.VITE_STATIC_URL,
   plugins: [
     vue(),
+    // legacy({
+    //   targets: ['defaults', 'ie >= 11', 'chrome 52'], // 需要兼容的目标列表
+    //   additionalLegacyPolyfills: ['regenerator-runtime/runtime'],
+    //   renderLegacyChunks: true,
+    //   polyfills: []
+    // }),
     isBeta && isAdmin ? VitePluginStyleInject() : null,
     AutoImport({
       imports: [{ 'vue': ['reactive', 'computed', 'ref', 'watch', 'onMounted', 'onUnmounted'] }, 'vue-router'],
@@ -96,7 +103,7 @@ export default defineConfig({
   build: {
     outDir: "dist",
     assetsInlineLimit: 0,
-    cssCodeSplit: idc,
+    cssCodeSplit: idc || !isAdmin,
     rollupOptions: {
       output: {
         ...getRollupOptOptions(projectName, isBeta),
