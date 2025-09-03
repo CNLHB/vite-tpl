@@ -121,8 +121,6 @@ export default defineConfig({
   build: {
     // 输出目录
     outDir: 'dist',
-    // 静态资源目录
-    assetsDir: 'static',
     assetsInlineLimit: 0,
     cssCodeSplit: isProduction || !isAdmin,
     // Rollup 配置
