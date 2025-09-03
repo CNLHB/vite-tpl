@@ -7,7 +7,7 @@ import AutoImport from 'unplugin-auto-import/vite'
 import { VantResolver } from "unplugin-vue-components/resolvers";
 import VitePluginStyleInject from 'vite-plugin-style-inject';
 import pkg from './package.json'
-import path from "path";
+import path, { resolve } from "path";
 const projectName = pkg.name
 const { NODE_ENV } = process.env
 // https://vite.dev/config/ 
@@ -105,7 +105,11 @@ export default defineConfig({
     assetsInlineLimit: 0,
     cssCodeSplit: idc || !isAdmin,
     rollupOptions: {
+      input: {
+        index: path.resolve(__dirname, `${projectName}.html`),
+      },
       output: {
+        // 修改这里的文件名
         ...getRollupOptOptions(projectName, isBeta),
         assetFileNames: (assetInfo) => {
           let chunkName = assetInfo.name || "";

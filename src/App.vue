@@ -3,11 +3,7 @@
 </script>
 
 <template>
-    <div>
-        <admin-container >
-          <router-view />
-        </admin-container>
-    </div>
+   <router-view />
 </template>
 
 <style scoped>
