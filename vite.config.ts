@@ -2,6 +2,7 @@
 import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import Components from "unplugin-vue-components/vite";
+import AutoImport from 'unplugin-auto-import/vite'
 import { VantResolver } from "unplugin-vue-components/resolvers";
 import VitePluginStyleInject from 'vite-plugin-style-inject';
 import pkg from './package.json'
@@ -15,62 +16,38 @@ let isDev = NODE_ENV === 'development'
 let isBeta = NODE_ENV === 'beta'
 let isAdmin = env.VITE_IS_ADMIN === 'yes'
 console.log('NODE_ENV', NODE_ENV, 'isAdmin', isAdmin, 'isDev', isDev, 'isBeta', isBeta, 'idc', idc);
+
+
 function getRollupOptOptions(projectName, isBeta) {
-  if (isBeta) {
+  if (isBeta && isAdmin) {
     return {
-      output: {
-        // 所有代码打包到单个文件
-        manualChunks: (_id) => {
-          // 无论是什么模块，都打包到 app 中
-          return 'app'
-        },
-        // 文件命名
-        entryFileNames: `${projectName}/js/app.js`,
-        chunkFileNames: `${projectName}/js/app.js`,
-        assetFileNames: (assetInfo) => {
-          let chunkName = assetInfo.name || "";
-          let extType = chunkName.split(".")[1] as string;
-          if (/css/i.test(extType)) {
-            extType = "css";
-          }
-          if (/png|jpg|jpeg|gif|svg|webp/i.test(extType)) {
-            extType = "images";
-          }
-          return `${projectName}/${extType}/[name][extname]`
-        },
+      // 所有代码打包到单个文件
+      manualChunks: (_id) => {
+        // 无论是什么模块，都打包到 app 中
+        return 'app'
       },
+      // 文件命名
+      entryFileNames: `${projectName}/js/app.js`,
+      chunkFileNames: `${projectName}/js/app.js`,
     }
   }
   return {
-    output: {
-      // 处理其他资源文件
-      entryFileNames: (_entryInfo) => {
-        return `${projectName}/js/[name]-[hash].js`;
-      },
-      assetFileNames: (assetInfo) => {
-        let chunkName = assetInfo.name || "";
-        let extType = chunkName.split(".")[1] as string;
-        if (/css/i.test(extType)) {
-          extType = "css";
-        }
-        if (/png|jpg|jpeg|gif|svg|webp/i.test(extType)) {
-          extType = "images";
-        }
-        return `${projectName}/${extType}/[name]-[hash][extname]`
-      },
-      chunkFileNames: (_chunkInfo) => {
-        const regex = /\/pages\/([^\/]+)\/.*\.vue$/
-        let name = ''
-        if (_chunkInfo.facadeModuleId) {
-          const match = _chunkInfo.facadeModuleId.match(regex) || []
-          // console.log('匹配到的目录名:', match[1]) // 输出: account
-          name = match[1]
-        }
-        return `${projectName}/js/${name ? name : '[name]'}-[hash].js`;
-      },
-      manualChunks: {
-        vue: ["vue"],
-      },
+    // 处理其他资源文件
+    entryFileNames: (_entryInfo) => {
+      return `${projectName}/js/[name]-[hash].js`;
+    },
+    chunkFileNames: (_chunkInfo) => {
+      const regex = /\/pages\/([^\/]+)\/.*\.vue$/
+      let name = ''
+      if (_chunkInfo.facadeModuleId) {
+        const match = _chunkInfo.facadeModuleId.match(regex) || []
+        // console.log('匹配到的目录名:', match[1]) // 输出: account
+        name = match[1]
+      }
+      return `${projectName}/js/${name ? name : '[name]'}-[hash].js`;
+    },
+    manualChunks: {
+      vue: ["vue"],
     },
   }
 }
@@ -78,7 +55,14 @@ export default defineConfig({
   base: isDev ? "/static" : env.VITE_STATIC_URL,
   plugins: [
     vue(),
-    isBeta ? VitePluginStyleInject() : null,
+    isBeta && isAdmin ? VitePluginStyleInject() : null,
+    AutoImport({
+      imports: [{ 'vue': ['reactive', 'computed', 'ref', 'watch', 'onMounted', 'onUnmounted'] }, 'vue-router'],
+      dts: true,
+      resolvers: [
+        VantResolver()
+      ],
+    }),
     Components({
       resolvers: [VantResolver()],
       dts: true,
@@ -114,12 +98,23 @@ export default defineConfig({
     assetsInlineLimit: 0,
     cssCodeSplit: idc,
     rollupOptions: {
-      ...getRollupOptOptions(projectName, isBeta)
+      output: {
+        ...getRollupOptOptions(projectName, isBeta),
+        assetFileNames: (assetInfo) => {
+          let chunkName = assetInfo.name || "";
+          let extType = chunkName.split(".")[1] as string;
+          if (/css/i.test(extType)) {
+            extType = "css";
+          }
+          if (/png|jpg|jpeg|gif|svg|webp/i.test(extType)) {
+            extType = "images";
+          }
+          return `${projectName}/${extType}/[name]-[hash][extname]`
+        },
+      },
     },
   },
   css: {
-    // 确保 CSS 被内联
-    extract: false,
     preprocessorOptions: {
       // less: {
       //   modifyVars: {
