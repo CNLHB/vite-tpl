@@ -71,6 +71,7 @@ const form = ref<BookingSearchParams>({
   follower: '',
   customerName: '',
   status: '',
+  time: ''
 });
 
 /**

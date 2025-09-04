@@ -42,4 +42,5 @@ export interface BookingSearchParams {
   follower?: string;
   customerName?: string;
   status?: string;
+  time?: string
 }
