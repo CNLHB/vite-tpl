@@ -52,7 +52,7 @@ function getRollupOptOptions(projectName, isBeta) {
   }
 }
 export default defineConfig({
-  base: isDev ? "/static" : env.VITE_STATIC_URL,
+  base: env.VITE_STATIC_URL,
   plugins: [
     vue(),
     isBeta && isAdmin ? VitePluginStyleInject() : null,
