@@ -4,6 +4,13 @@
     <el-form-item label="渠道id">
       <el-input v-model="form.channelId" placeholder="渠道id"></el-input>
     </el-form-item>
+    <el-form-item label="时间范围">
+      <el-date-picker
+        v-model="form.time"
+        type="datetime"
+        placeholder="Select date and time"
+      />
+    </el-form-item>
     <el-form-item label="渠道名称">
       <el-input v-model="form.channelName" placeholder="渠道名称"></el-input>
     </el-form-item>
