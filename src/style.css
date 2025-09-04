@@ -2,3 +2,6 @@
 .admin-sidebar .scrollbar-wrapper .el-scrollbar__view{
   height: auto !important;
 }
+.el-card + .el-card{
+  margin-top: 20px;
+}
