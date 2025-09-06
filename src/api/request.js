@@ -2,7 +2,6 @@
 import Axios from 'axios'
 import Qs from 'qs'
 import { showMessage } from '../utils'
-import { showLoading } from '@/utils/loading'
 function axiosErrorInterceptors(instance) {
   instance.interceptors.response.use(
     response => {
@@ -29,12 +28,16 @@ function axiosErrorInterceptors(instance) {
       } else {
         errmsg = '请求失败，请稍后重试'
       }
-      return Promise.reject(new Error(errmsg))
+      return Promise.reject({ ret: 99999, errmsg, data: null })
     }
   )
 }
 
-export default function request(url, data, { method = '', timeout = 8000, requestHeader = null }) {
+export default function request(
+  url,
+  data,
+  { method = '', timeout = 8000, requestHeader = null, selfCatch = false }
+) {
   const defaultMethod = data ? 'post' : 'get'
   const options = {
     method: method ? method : defaultMethod,
@@ -63,15 +66,18 @@ export default function request(url, data, { method = '', timeout = 8000, reques
     axiosErrorInterceptors(instance)
     instance(options)
       .then(res => {
-        if (res.ret) {
+        if (!res.ret) {
+          // return Promise.reject({ ret: 1000, errmsg: '服务不可用', data: null })
           return Promise.reject(res)
         }
         resolve(res.data)
       })
-      .catch(e => {
-        console.log('e', e)
-        showMessage(e.message)
-        reject(e.message)
+      .catch(err => {
+        console.log('error result', err)
+        if (!selfCatch) {
+          showMessage(err.errmsg)
+        }
+        reject(err)
       })
   })
 }

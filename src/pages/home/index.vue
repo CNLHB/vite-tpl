@@ -9,9 +9,11 @@
 </template>
 <script setup lang="ts">
 import request from '@/api/request'
+import { showLoading } from '@/utils/loading'
 import { getCurrentInstance } from 'vue'
 const list = ref([1, 2, 3])
 onMounted(() => {
+  showLoading()
   request('/api/getList', { page: 1, pageSize: 10 }, {})
     .then(res => {
       console.log('res', res)
@@ -25,7 +27,7 @@ if (currentInstance) {
   // currentInstance.appContext.app.config.globalProperties
 }
 function handleData() {
-  request('/api/getList', { page: 1, pageSize: 10 }, {})
+  request('http://localhost:3003/dev/static', { page: 1, pageSize: 10 }, {})
     .then(res => {
       console.log('res', res)
     })

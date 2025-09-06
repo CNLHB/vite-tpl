@@ -5,11 +5,13 @@ export const showLoading = (message = '加载中...') => {
   })
   return closeToast
 }
-
-export const showMessage = (message = '加载中...') => {
+export const hideLoading = () => {
+  closeToast()
+}
+export const showMessage = (message = '') => {
   let opts = {
     message: '',
-    forbidClick: true,
+    forbidClick: false,
     duration: 3 * 1000,
   }
   if (!message) {
