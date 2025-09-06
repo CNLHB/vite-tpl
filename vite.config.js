@@ -4,7 +4,6 @@ import Components from "unplugin-vue-components/vite";
 import AutoImport from "unplugin-auto-import/vite";
 import { VantResolver } from "unplugin-vue-components/resolvers";
 import { createHtmlPlugin } from "vite-plugin-html";
-// @ts-ignore
 import eslint from "vite-plugin-eslint";
 import pkg from "./package.json";
 import path from "path";
@@ -63,7 +62,7 @@ export default defineConfig({
       minify: true,
       pages: [
         {
-          entry: "src/main.ts",
+          entry: "src/main.js",
           filename: `${projectName}.html`,
           template: `${projectName}.html`,
         },
@@ -114,7 +113,7 @@ export default defineConfig({
         // 修改这里的文件名
         entryFileNames: () => `${projectName}/js/[name]-[hash].js`,
         // 代码分割文件命名
-        chunkFileNames: (chunkInfo: any) => {
+        chunkFileNames: (chunkInfo) => {
           // 提取页面目录名作为文件名
           const regex = /\/pages\/([^\/]+)\/.*\.vue$/;
           const match = chunkInfo.facadeModuleId?.match(regex) || [];
@@ -123,7 +122,7 @@ export default defineConfig({
         },
         assetFileNames: (assetInfo) => {
           let chunkName = assetInfo.name || "";
-          let extType = chunkName.split(".")[1] as string;
+          let extType = chunkName.split(".")[1];
           if (/css/i.test(extType)) {
             extType = "css";
           }

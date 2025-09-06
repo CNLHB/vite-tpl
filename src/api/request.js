@@ -1,15 +1,14 @@
 // @ts-nocheck
 import Axios from "axios";
-import type { AxiosResponse, AxiosError } from "axios";
 import Qs from "qs";
 
-function axiosErrorInterceptors(instance: any) {
+function axiosErrorInterceptors(instance) {
   instance.interceptors.response.use(
-    (response: AxiosResponse) => {
+    (response) => {
       return response;
     },
-    (error: AxiosError) => {
-      const errMessageMap: Record<number, string> = {
+    (error) => {
+      const errMessageMap = {
         403: "请求被拒绝，请联系客服处理",
         404: "您访问的资源不可用，请联系客服处理",
         502: "服务器网关出错，请稍后重试",
@@ -36,12 +35,7 @@ function axiosErrorInterceptors(instance: any) {
   );
 }
 
-export default function request({
-  url,
-  param,
-  timeout = 8000,
-  requestHeader,
-}: Record<string, any>): Promise<any> {
+export default function request({ url, param, timeout = 8000, requestHeader }) {
   const options = {
     method: "post",
     url: url,
@@ -52,7 +46,7 @@ export default function request({
       "Content-Type": "application/x-www-form-urlencoded",
     },
     transformRequest: [
-      function (data: any) {
+      function (data) {
         if (data instanceof FormData) return data;
         return Qs.stringify(data);
       },
@@ -66,11 +60,11 @@ export default function request({
   return new Promise((resolve, reject) => {
     const instance = Axios.create();
     axiosErrorInterceptors(instance);
-    instance(options as any)
-      .then((data: any) => {
+    instance(options)
+      .then((data) => {
         resolve(data.data);
       })
-      .catch((e: Error) => {
+      .catch((e) => {
         reject(e.message);
       });
   });
