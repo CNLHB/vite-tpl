@@ -9,6 +9,9 @@ const app = createApp(App)
 const pinia = createPinia()
 const a = 1
 console.log('xxx')
+console.log('xxx')
+console.log('xxx')
+console.log('xxx')
 app.use(router)
 
 app.use(pinia)
