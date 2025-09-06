@@ -1,0 +1,15 @@
+{
+  "globals": {
+    "computed": true,
+    "onBeforeRouteLeave": true,
+    "onBeforeRouteUpdate": true,
+    "onMounted": true,
+    "onUnmounted": true,
+    "reactive": true,
+    "ref": true,
+    "useLink": true,
+    "useRoute": true,
+    "useRouter": true,
+    "watch": true
+  }
+}

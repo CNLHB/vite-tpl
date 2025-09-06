@@ -12,6 +12,9 @@
     "paths": {
       "@/*": [
         "./src/*"
+      ],
+      "@/api/*": [
+        "./src/api/*"
       ]
     }
   },
@@ -20,6 +23,7 @@
     "src/**/*.tsx",
     "src/**/*.vue",
     "components.d.ts",
+    "auto-imports.d.ts",
     "types/**/*"
   ],
   "exclude": [

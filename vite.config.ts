@@ -3,6 +3,9 @@ import vue from "@vitejs/plugin-vue";
 import Components from "unplugin-vue-components/vite";
 import AutoImport from "unplugin-auto-import/vite";
 import { VantResolver } from "unplugin-vue-components/resolvers";
+import { createHtmlPlugin } from "vite-plugin-html";
+// @ts-ignore
+import eslint from "vite-plugin-eslint";
 import pkg from "./package.json";
 import path from "path";
 const projectName = pkg.name;
@@ -27,6 +30,7 @@ console.log(
 export default defineConfig({
   base: env.VITE_STATIC_URL,
   plugins: [
+    eslint(),
     // Vue 官方插件
     vue(),
     // 自动导入 Vue 相关 API
@@ -48,8 +52,23 @@ export default defineConfig({
       ],
       dts: true,
       resolvers: [VantResolver()],
+      // eslint报错解决
+      eslintrc: {
+        enabled: true, // Default `false`
+        filepath: "./.eslintrc-auto-import.json", // Default `./.eslintrc-auto-import.json`
+        globalsPropValue: true, // Default `true`, (true | false | 'readonly' | 'readable' | 'writable' | 'writeable')
+      },
     }),
-
+    createHtmlPlugin({
+      minify: true,
+      pages: [
+        {
+          entry: "src/main.ts",
+          filename: `${projectName}.html`,
+          template: `${projectName}.html`,
+        },
+      ],
+    }),
     // 自动导入组件
     Components({
       resolvers: [VantResolver()],
@@ -59,21 +78,23 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "src"),
+      "@/api": path.resolve(__dirname, "src/api"),
     },
   },
   define: {
     "process.env": {},
   },
   server: {
-    port: 5173,
+    port: 3003,
     cors: true,
     // 开发环境模拟生产环境路径
     proxy: {
       // 模拟页面访问路径
       [`^${env.VITE_BASE_URL}`]: {
-        target: "http://localhost:5173",
+        target: "http://localhost:3003",
         changeOrigin: true,
         rewrite: (_path) => {
+          // console.log("rewrite", _path);
           // 移除基础路径，让 Vue Router 处理
           return "/";
         },
@@ -89,9 +110,6 @@ export default defineConfig({
     cssCodeSplit: isProduction,
     // Rollup 配置
     rollupOptions: {
-      input: {
-        index: path.resolve(__dirname, `${projectName}.html`),
-      },
       output: {
         // 修改这里的文件名
         entryFileNames: () => `${projectName}/js/[name]-[hash].js`,
@@ -102,10 +120,6 @@ export default defineConfig({
           const match = chunkInfo.facadeModuleId?.match(regex) || [];
           const name = match[1] || "[name]";
           return `${projectName}/js/${name}-[hash].js`;
-        },
-        // 手动代码分割
-        manualChunks: {
-          // vue: ["vue"],
         },
         assetFileNames: (assetInfo) => {
           let chunkName = assetInfo.name || "";
@@ -118,18 +132,15 @@ export default defineConfig({
           }
           return `${projectName}/${extType}/[name]-[hash][extname]`;
         },
+        // 手动代码分割
+        manualChunks: {
+          // vue: ["vue"],
+        },
       },
     },
   },
   css: {
     preprocessorOptions: {
-      // less: {
-      //   modifyVars: {
-      //     // 修改主题变量
-      //     'primary-color': '#1DA57A',
-      //   },
-      //   javascriptEnabled: true,
-      // },
       scss: {
         // 自动导入定制化样式文件进行样式覆盖
         // additionalData: '@use "@/styles/variables.scss" as *;',
