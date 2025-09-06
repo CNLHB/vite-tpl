@@ -1,5 +1,6 @@
 {
   "globals": {
+    "closeToast": true,
     "computed": true,
     "onBeforeRouteLeave": true,
     "onBeforeRouteUpdate": true,
@@ -7,6 +8,8 @@
     "onUnmounted": true,
     "reactive": true,
     "ref": true,
+    "showLoadingToast": true,
+    "showToast": true,
     "useLink": true,
     "useRoute": true,
     "useRouter": true,

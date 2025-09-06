@@ -6,6 +6,8 @@
 // biome-ignore lint: disable
 export {}
 declare global {
+  const Toast: typeof import('vant')['Toast']
+  const closeToast: typeof import('vant/es')['closeToast']
   const computed: typeof import('vue')['computed']
   const onBeforeRouteLeave: typeof import('vue-router')['onBeforeRouteLeave']
   const onBeforeRouteUpdate: typeof import('vue-router')['onBeforeRouteUpdate']
@@ -13,6 +15,8 @@ declare global {
   const onUnmounted: typeof import('vue')['onUnmounted']
   const reactive: typeof import('vue')['reactive']
   const ref: typeof import('vue')['ref']
+  const showLoadingToast: typeof import('vant/es')['showLoadingToast']
+  const showToast: typeof import('vant/es')['showToast']
   const useLink: typeof import('vue-router')['useLink']
   const useRoute: typeof import('vue-router')['useRoute']
   const useRouter: typeof import('vue-router')['useRouter']

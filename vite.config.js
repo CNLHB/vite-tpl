@@ -1,19 +1,19 @@
-import { defineConfig, loadEnv } from 'vite';
-import vue from '@vitejs/plugin-vue';
-import Components from 'unplugin-vue-components/vite';
-import AutoImport from 'unplugin-auto-import/vite';
-import { VantResolver } from 'unplugin-vue-components/resolvers';
-import { createHtmlPlugin } from 'vite-plugin-html';
-import eslint from 'vite-plugin-eslint';
-import pkg from './package.json';
-import path from 'path';
-const projectName = pkg.name;
-const { NODE_ENV = '' } = process.env;
+import { defineConfig, loadEnv } from 'vite'
+import vue from '@vitejs/plugin-vue'
+import AutoImport from 'unplugin-auto-import/vite'
+import Components from 'unplugin-vue-components/vite'
+import { VantResolver } from '@vant/auto-import-resolver'
+import { createHtmlPlugin } from 'vite-plugin-html'
+import eslint from 'vite-plugin-eslint'
+import pkg from './package.json'
+import path from 'path'
+const projectName = pkg.name
+const { NODE_ENV = '' } = process.env
 // https://vite.dev/config/
-const env = loadEnv(NODE_ENV, process.cwd());
-const isProduction = NODE_ENV === 'production';
-const isDevelopment = NODE_ENV === 'development';
-const isBeta = NODE_ENV === 'beta';
+const env = loadEnv(NODE_ENV, process.cwd())
+const isProduction = NODE_ENV === 'production'
+const isDevelopment = NODE_ENV === 'development'
+const isBeta = NODE_ENV === 'beta'
 
 console.log(
   'NODE_ENV',
@@ -24,7 +24,7 @@ console.log(
   isBeta,
   'isProduction',
   isProduction
-);
+)
 
 export default defineConfig({
   base: env.VITE_STATIC_URL,
@@ -88,7 +88,7 @@ export default defineConfig({
         rewrite: _path => {
           // console.log("rewrite", _path);
           // 移除基础路径，让 Vue Router 处理
-          return '/';
+          return '/'
         },
       },
     },
@@ -108,21 +108,21 @@ export default defineConfig({
         // 代码分割文件命名
         chunkFileNames: chunkInfo => {
           // 提取页面目录名作为文件名
-          const regex = /\/pages\/([^\/]+)\/.*\.vue$/;
-          const match = chunkInfo.facadeModuleId?.match(regex) || [];
-          const name = match[1] || '[name]';
-          return `${projectName}/js/${name}-[hash].js`;
+          const regex = /\/pages\/([^\/]+)\/.*\.vue$/
+          const match = chunkInfo.facadeModuleId?.match(regex) || []
+          const name = match[1] || '[name]'
+          return `${projectName}/js/${name}-[hash].js`
         },
         assetFileNames: assetInfo => {
-          let chunkName = assetInfo.name || '';
-          let extType = chunkName.split('.')[1];
+          let chunkName = assetInfo.name || ''
+          let extType = chunkName.split('.')[1]
           if (/css/i.test(extType)) {
-            extType = 'css';
+            extType = 'css'
           }
           if (/png|jpg|jpeg|gif|svg|webp/i.test(extType)) {
-            extType = 'images';
+            extType = 'images'
           }
-          return `${projectName}/${extType}/[name]-[hash][extname]`;
+          return `${projectName}/${extType}/[name]-[hash][extname]`
         },
         // 手动代码分割
         manualChunks: {
@@ -139,4 +139,4 @@ export default defineConfig({
       },
     },
   },
-});
+})

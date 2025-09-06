@@ -1,7 +1,5 @@
-import { showLoading } from './loading'
+import { showLoading, showMessage } from './loading'
 
-function appGlobalPropertiesUse(app) {
-  app.config.globalProperties.$loading = showLoading
-}
+function appGlobalPropertiesUse(app) {}
 
-export { appGlobalPropertiesUse }
+export { appGlobalPropertiesUse, showMessage }

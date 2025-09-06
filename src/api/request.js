@@ -1,7 +1,8 @@
 // @ts-nocheck
 import Axios from 'axios'
 import Qs from 'qs'
-
+import { showMessage } from '../utils'
+import { showLoading } from '@/utils/loading'
 function axiosErrorInterceptors(instance) {
   instance.interceptors.response.use(
     response => {
@@ -33,12 +34,14 @@ function axiosErrorInterceptors(instance) {
   )
 }
 
-export default function request({ url, param, timeout = 8000, requestHeader = null }) {
+export default function request(url, data, { method = '', timeout = 8000, requestHeader = null }) {
+  const defaultMethod = data ? 'post' : 'get'
   const options = {
-    method: 'post',
+    method: method ? method : defaultMethod,
     url: url,
-    data: param,
+    data,
     timeout: timeout,
+    withCredentials: true,
     headers: {
       'X-Requested-With': 'XMLHttpRequest',
       'Content-Type': 'application/x-www-form-urlencoded',
@@ -59,10 +62,15 @@ export default function request({ url, param, timeout = 8000, requestHeader = nu
     const instance = Axios.create()
     axiosErrorInterceptors(instance)
     instance(options)
-      .then(data => {
-        resolve(data.data)
+      .then(res => {
+        if (res.ret) {
+          return Promise.reject(res)
+        }
+        resolve(res.data)
       })
       .catch(e => {
+        console.log('e', e)
+        showMessage(e.message)
         reject(e.message)
       })
   })
