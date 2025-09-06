@@ -8,6 +8,7 @@ import router from './router/index'
 const app = createApp(App)
 const pinia = createPinia()
 const a = 1
+const a1 = 1
 console.log('xxx')
 console.log('xxx')
 console.log('xxx')

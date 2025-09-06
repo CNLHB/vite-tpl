@@ -10,6 +10,8 @@ import request from '@/api/request'
 import { getCurrentInstance } from 'vue'
 const list = ref([1, 2, 3])
 const list1 = 1
+const list2 = 1
+const list3 = 1
 onMounted(() => {
   request({
     url: '/api/getList',
