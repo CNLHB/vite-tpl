@@ -13,6 +13,7 @@ console.log('xxx')
 console.log('xxx')
 console.log('xxx')
 console.log('xxx')
+
 app.use(router)
 
 app.use(pinia)

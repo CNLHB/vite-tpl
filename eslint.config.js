@@ -1,10 +1,10 @@
-import js from '@eslint/js';
-import globals from 'globals';
-import pluginVue from 'eslint-plugin-vue';
-import json from '@eslint/json';
-import { defineConfig } from 'eslint/config';
-import autoImport from './.eslintrc-auto-import.json' with { type: 'json' };
-import configPrettier from '@vue/eslint-config-prettier';
+import js from '@eslint/js'
+import globals from 'globals'
+import pluginVue from 'eslint-plugin-vue'
+import json from '@eslint/json'
+import { defineConfig } from 'eslint/config'
+import autoImport from './.eslintrc-auto-import.json' with { type: 'json' }
+import configPrettier from '@vue/eslint-config-prettier'
 export default defineConfig([
   {
     files: ['**/*.{js,mjs,cjs,vue}'],
@@ -44,4 +44,4 @@ export default defineConfig([
     // Note: there should be no other properties in this object
     ignores: ['node_modules'],
   },
-]);
+])
