@@ -1,10 +1,7 @@
-import type { App } from "vue"
-import { showLoading } from "./loading"
+import { showLoading } from './loading'
 
-function appGlobalPropertiesUse(app: App) {
+function appGlobalPropertiesUse(app) {
   app.config.globalProperties.$loading = showLoading
 }
 
-export {
-  appGlobalPropertiesUse
-}
+export { appGlobalPropertiesUse }

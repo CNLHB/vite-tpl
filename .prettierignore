@@ -1,0 +1,12 @@
+# 忽略文件和目录
+dist
+node_modules
+coverage
+*.min.js
+*.min.css
+public
+.nuxt
+.output
+.vscode
+.idea
+*.md

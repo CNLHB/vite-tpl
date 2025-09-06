@@ -1,12 +1,10 @@
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <h1 class="card">
     account
-    <img src="./images/btn_bg.png" alt="">
-        <router-link to="/">home</router-link>
-
+    <img src="./images/btn_bg.png" alt="" />
+    <router-link to="/">home</router-link>
   </h1>
 </template>
 

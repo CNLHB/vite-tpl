@@ -1,14 +1,14 @@
-import { createApp } from "vue";
+import { createApp } from 'vue'
 // import './common/flexble'
-import "./style.css";
-import App from "./App.vue";
-import { createPinia } from "pinia";
-import router from "./router/index";
+import './style.css'
+import App from './App.vue'
+import { createPinia } from 'pinia'
+import router from './router/index'
 
-const app = createApp(App);
-const pinia = createPinia();
-app.use(router);
+const app = createApp(App)
+const pinia = createPinia()
+app.use(router)
 
-app.use(pinia);
+app.use(pinia)
 
-app.mount("#app");
+app.mount('#app')

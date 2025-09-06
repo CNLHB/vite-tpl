@@ -1,4 +1,3 @@
-
 // import account from '@/pages/account/index.vue'
 export default [
   {
@@ -6,4 +5,4 @@ export default [
     name: 'account',
     component: () => import('@/pages/account/indexv2.vue'),
   },
-];
+]

@@ -1,12 +1,12 @@
-import { reactive } from "vue";
+import { reactive } from 'vue'
 
 export const userInfo = () => {
   const user = reactive({
-    name: "",
+    name: '',
     age: 0,
-    token: "",
-  });
+    token: '',
+  })
   return {
     user,
-  };
-};
+  }
+}
