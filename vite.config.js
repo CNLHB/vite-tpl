@@ -41,6 +41,9 @@ export default defineConfig({
         },
         // Vue Router
         'vue-router',
+        {
+          vant: ['showToast', 'closeToast', 'showLoadingToast'],
+        },
       ],
       dts: true,
       resolvers: [VantResolver()],
