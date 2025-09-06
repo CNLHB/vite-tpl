@@ -58,12 +58,16 @@
     "vite-plugin-html": "^3.2.2"
   },
   "lint-staged": {
-    "src/**/*.{js,jsx,vue}": [
-      "npm run lint",
-      "npm run format"
+    "src/**/*.{js,vue,ts,jsx,tsx}": [
+      "eslint --fix",
+      "prettier --write"
     ],
-    "src/**/*.{css,scss,html,json,md}": [
-      "npm run format"
+    "src/**/*.{css,scss,less,vue}": [
+      "stylelint --fix",
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml}": [
+      "prettier --write"
     ]
   }
 }
